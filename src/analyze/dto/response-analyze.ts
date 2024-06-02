@@ -1,15 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsNumber, IsString } from "class-validator";
+import { IsDateString, IsNumber, IsObject, IsString } from "class-validator";
 import { ReqAnalyzeDto } from "./request-analyze";
 
-class BodyType extends ReqAnalyzeDto {}
-
+interface Feedback {
+  score: number;
+  comment: string;
+}
 export class ResAnalyzeDto {
-  @ApiProperty({ description: "pcm data" })
-  @IsNumber({}, { each: true })
-  readonly pcm: number[];
+  @IsObject()
+  readonly decibel_feedback: Feedback;
 
-  @ApiProperty({ description: "create date" })
-  @IsDateString()
-  readonly createDate: Date;
+  @IsObject()
+  readonly pitch_feedback: Feedback;
 }
