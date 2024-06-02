@@ -1,10 +1,10 @@
-import { Body, Controller, Get, MessageEvent, Post, Sse } from "@nestjs/common";
+import { Body, Controller, MessageEvent, Post, Sse } from "@nestjs/common";
 import { ReqAnalyzeDto } from "./dto/request-analyze";
 import { AnalyzeService } from "./analyze.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Test } from "./dto/test";
 import { ResAnalyzeDto } from "./dto/response-analyze";
-import { Observable, Subject, interval, map } from "rxjs";
+import { Observable, Subject } from "rxjs";
 
 @Controller("analyze")
 @ApiTags("분석 서버 연결 api")
@@ -37,10 +37,7 @@ export class AnalyzeController {
   })
   async receiveData(@Body() body: ResAnalyzeDto) {
     console.log("분석 자료 확인");
-    console.log(this.sseSubject);
-    if (this.sseSubject.closed) {
-      console.log("SSE 닫혀있음");
-    }
+    console.log("receiveData: ", body);
     this.sseSubject.next(this.analyzeService.receiveData(body));
     return true;
   }
