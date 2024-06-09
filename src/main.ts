@@ -6,9 +6,14 @@ import { json, urlencoded } from "express";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(json({ limit: "50mb" }));
+  // 모든 api 경로 전역 설정
+  app.setGlobalPrefix("api");
 
+  //request size
+  app.use(json({ limit: "50mb" }));
   app.use(urlencoded({ extended: true, limit: "50mb" }));
+
+  //global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -16,6 +21,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
   setSwagger(app);
   await app.listen(4000);
 }

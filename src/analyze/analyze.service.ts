@@ -3,19 +3,33 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
   MessageEvent,
 } from "@nestjs/common";
-import { ReqAnalyzeDto } from "./dto/request-analyze";
+import { ReqAnalyzeDto } from "./dto/request-analyze.dto";
 import { ConfigService } from "@nestjs/config";
 import { AxiosResponse } from "axios";
-import { ResAnalyzeDto } from "./dto/response-analyze";
+import { ResAnalyzeDto } from "./dto/response-analyze.dto";
+import { Auth } from "src/auth/auth.entity";
 
 @Injectable()
 export class AnalyzeService {
+  private logger = new Logger("Service-Analyze");
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
+
+  async getUserName(userId: string) {
+    const found = await Auth.findOne({
+      where: {
+        userId,
+      },
+    });
+    return {
+      username: found.username,
+    };
+  }
 
   async sendPcmData(body: ReqAnalyzeDto): Promise<AxiosResponse<boolean>> {
     try {

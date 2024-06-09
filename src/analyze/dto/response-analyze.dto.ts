@@ -1,12 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsDateString,
-  IsNumber,
-  IsObject,
-  IsString,
-  ValidateNested,
-} from "class-validator";
-import { ReqAnalyzeDto } from "./request-analyze";
+import { IsNumber, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 
 class Feedback {

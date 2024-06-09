@@ -1,14 +1,26 @@
-import { Body, Controller, MessageEvent, Post, Sse } from "@nestjs/common";
-import { ReqAnalyzeDto } from "./dto/request-analyze";
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  MessageEvent,
+  Post,
+  Req,
+  Sse,
+  UseGuards,
+} from "@nestjs/common";
+import { ReqAnalyzeDto } from "./dto/request-analyze.dto";
 import { AnalyzeService } from "./analyze.service";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Test } from "./dto/test";
-import { ResAnalyzeDto } from "./dto/response-analyze";
+import { ResAnalyzeDto } from "./dto/response-analyze.dto";
 import { Observable, Subject } from "rxjs";
+import { AuthGuard } from "@nestjs/passport";
 
 @Controller("analyze")
+@UseGuards(AuthGuard())
 @ApiTags("분석 서버 연결 api")
 export class AnalyzeController {
+  private logger = new Logger("Controller-Analyze");
   constructor(private readonly analyzeService: AnalyzeService) {}
   private sseSubject: Subject<MessageEvent> = new Subject();
 
@@ -51,12 +63,9 @@ export class AnalyzeController {
     return this.sseSubject.asObservable();
   }
 
-  @Post("test")
-  async test(@Body() body: Test) {
-    console.log(body.data);
-    if (body.data) {
-      return true;
-    }
-    return false;
+  @Get("username")
+  async getUserName(@Req() req) {
+    this.logger.debug("username 조회");
+    return this.analyzeService.getUserName(req.user.userId);
   }
 }
