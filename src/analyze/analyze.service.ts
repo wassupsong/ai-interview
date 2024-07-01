@@ -10,7 +10,7 @@ import { ReqAnalyzeDto } from "./dto/request-analyze.dto";
 import { ConfigService } from "@nestjs/config";
 import { AxiosResponse } from "axios";
 import { ResAnalyzeDto } from "./dto/response-analyze.dto";
-import { Auth } from "src/auth/auth.entity";
+import { User } from "src/auth/entities/user.entity";
 
 @Injectable()
 export class AnalyzeService {
@@ -21,7 +21,7 @@ export class AnalyzeService {
   ) {}
 
   async getUserName(userId: string) {
-    const found = await Auth.findOne({
+    const found = await User.findOne({
       where: {
         userId,
       },

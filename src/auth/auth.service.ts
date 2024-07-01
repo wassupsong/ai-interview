@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from "@nestjs/common";
-import { Auth } from "./auth.entity";
+import { User } from "./entities/user.entity";
 import { JwtService } from "@nestjs/jwt";
 import { SocialSignUpDto } from "./dto/social-signup";
 
@@ -15,8 +15,8 @@ export class AuthService {
 
   async socialSignUp(socialSignUpDto: SocialSignUpDto): Promise<void> {
     try {
-      const user = Auth.create({ ...socialSignUpDto });
-      await Auth.save(user);
+      const user = User.create({ ...socialSignUpDto });
+      await User.save(user);
     } catch (error) {
       if (error.code === "23505") {
         this.logger.error(
@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   async socialSignIn(userId: string): Promise<{ accessToken: string }> {
-    const findUser = await Auth.findOne({ where: { userId } });
+    const findUser = await User.findOne({ where: { userId } });
     if (!findUser) {
       this.logger.error(`not found userId: ${userId}`);
       return {

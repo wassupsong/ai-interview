@@ -4,6 +4,7 @@ import {
   Get,
   Logger,
   MessageEvent,
+  ParseArrayPipe,
   Post,
   Req,
   Sse,
@@ -34,8 +35,9 @@ export class AnalyzeController {
     description: "success",
     type: ResAnalyzeDto,
   })
-  async postData(@Body() body: ReqAnalyzeDto) {
-    return this.analyzeService.sendPcmData(body);
+  async postData(@Body("pcm", ParseArrayPipe) pcm: ReqAnalyzeDto) {
+    this.logger.debug(`postData pcm: ${JSON.stringify(pcm)}`);
+    return this.analyzeService.sendPcmData(pcm);
   }
 
   @Post("result")
